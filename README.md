@@ -20,6 +20,11 @@
         - Route53 DNS to provide User with single POC
 
     
+    Secondary Goal:
+
+        - Migrate to ECS Cluster
+
+    
     End Goal:
 
         - Migrate to EKS Cluster
