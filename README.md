@@ -8,6 +8,8 @@
     
     Basic Starting Architecture ( Bottom-Up ):
 
+        - VPC to house the AWS resources
+
         - EC2 instances running the workload
 
         - ASG maintaining workload balance
