@@ -71,7 +71,30 @@ module "alb" {
 
   target_groups = [
     {
-      name_prefix          = "html-"
+      name_prefix          = "2048-"
+      backend_protocol     = "HTTP"
+      backend_port         = 80
+      target_type          = "instance"
+      deregistration_delay = 10
+      my_target = {
+          target_id = #module.asg.instance_id
+          port = 80
+        }
+
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/healthz"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 3
+        timeout             = 6
+        protocol            = "HTTP"
+        matcher             = "200"
+      }
+    },
+    {
+      name_prefix          = "floppybird-"
       backend_protocol     = "HTTP"
       backend_port         = 80
       target_type          = "instance"
@@ -93,10 +116,35 @@ module "alb" {
 
   https_listeners = [
     {
-      port               = 443
-      protocol           = "HTTPS"
-      certificate_arn    = module.acm.acm_certificate_arn
-      target_group_index = 0
+      port            = 443
+      protocol        = "HTTPS"
+      certificate_arn = module.acm.acm_certificate_arn
+      #target_group_index = 0
+    }
+  ]
+
+  https_listener_rules = [
+    {
+      https_listener_index = 0
+      actions = [{
+        type     = "forward"
+        protocol = "HTTPS"
+      }]
+
+      conditions = [{
+        path_patterns = ["/2048*"]
+      }]
+    },
+    {
+      https_listener_index = 1
+      actions = [{
+        type     = "forward"
+        protocol = "HTTPS"
+      }]
+
+      conditions = [{
+        path_patterns = ["/floppybird*"]
+      }]
     }
   ]
 
