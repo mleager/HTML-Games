@@ -41,45 +41,71 @@ module "private_sg" {
   ]
 }
 
-module "asg" {
-  source  = "terraform-aws-modules/autoscaling/aws"
-  version = "6.10.0"
-
-  name = "html-asg"
-
-  min_size                  = 1
-  max_size                  = 3
-  desired_capacity          = 2
-  health_check_grace_period = 300
-  health_check_type         = "EC2"
-  vpc_zone_identifier       = module.vpc.private_subnets
-  force_delete              = true
-
-  target_group_arns = module.alb.target_group_arns
-
-  launch_template_name        = "html-launch-template"
-  launch_template_description = "Launch template for HTML Games"
-  update_default_version      = true
-  launch_template_version     = "$Latest"
-
-  image_id        = data.aws_ami.amazonlinux2.id
-  instance_type   = "t2.micro"
-  security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("user-data.sh")
-
-  create_iam_instance_profile = true
-  iam_role_name               = "ssm-iam-profile"
-  iam_role_path               = "/ec2/"
-  iam_role_description        = "IAM role for SSM Access to EC2"
-  iam_role_tags = {
-    CustomIamRole = "No"
-  }
-  iam_role_policies = {
-    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  }
+resource "aws_instance" "webserver1" {
+  ami                  = "ami-04823729c75214919"
+  instance_type        = "t2.micro"
+  iam_instance_profile = "EC2FullAccess"
+  subnet_id            = module.vpc.private_subnets[0]
+  security_groups      = [module.private_sg.security_group_id]
+  user_data            = file("game-2048.sh")
 
   tags = {
-    Environment = "Terraform"
-    Name        = "html-games"
+    Name = "2048"
   }
 }
+
+resource "aws_instance" "webserver2" {
+  ami                  = "ami-04823729c75214919"
+  instance_type        = "t2.micro"
+  iam_instance_profile = "EC2FullAccess"
+  subnet_id            = module.vpc.private_subnets[1]
+  security_groups      = [module.private_sg.security_group_id]
+  user_data            = file("game-bird.sh")
+
+  tags = {
+    Name = "floppybird"
+  }
+}
+
+# module "asg" {
+#   source  = "terraform-aws-modules/autoscaling/aws"
+#   version = "6.10.0"
+
+#   name = "html-asg"
+
+#   min_size                  = 1
+#   max_size                  = 3
+#   desired_capacity          = 2
+#   health_check_grace_period = 300
+#   health_check_type         = "EC2"
+#   vpc_zone_identifier       = module.vpc.private_subnets
+#   force_delete              = true
+
+#   target_group_arns = module.alb.target_group_arns
+
+#   launch_template_name        = "html-launch-template"
+#   launch_template_description = "Launch template for HTML Games"
+#   update_default_version      = true
+#   launch_template_version     = "$Latest"
+
+#   image_id        = data.aws_ami.amazonlinux2.id
+#   instance_type   = "t2.micro"
+#   security_groups = [module.private_sg.security_group_id]
+#   user_data       = filebase64("user-data.sh")
+
+#   create_iam_instance_profile = true
+#   iam_role_name               = "ssm-iam-profile"
+#   iam_role_path               = "/ec2/"
+#   iam_role_description        = "IAM role for SSM Access to EC2"
+#   iam_role_tags = {
+#     CustomIamRole = "No"
+#   }
+#   iam_role_policies = {
+#     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+#   }
+
+#   tags = {
+#     Environment = "Terraform"
+#     Name        = "html-games"
+#   }
+# }
