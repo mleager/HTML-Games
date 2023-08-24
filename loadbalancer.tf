@@ -23,7 +23,7 @@ module "dns_record" {
       name    = "www"
       type    = "CNAME"
       ttl     = 3600
-      records = [module.alb.lb_dns_name] #aws_lb.alb.dns_name
+      records = [module.alb.lb_dns_name]
     }
   ]
 }
