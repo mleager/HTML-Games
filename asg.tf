@@ -41,23 +41,23 @@ module "private_sg" {
   ]
 }
 
-module "asg" {
+module "asg-1" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "6.10.0"
 
-  name = "html-asg"
+  name = "2048"
 
   min_size                  = 1
-  max_size                  = 3
-  desired_capacity          = 2
+  max_size                  = 1
+  desired_capacity          = 1
   health_check_grace_period = 300
   health_check_type         = "EC2"
   vpc_zone_identifier       = module.vpc.private_subnets
   force_delete              = true
 
-  target_group_arns = module.alb.target_group_arns
+  target_group_arns = [module.alb.target_group_arns[0]]
 
-  launch_template_name        = "html-launch-template"
+  launch_template_name        = "html-launch-template1"
   launch_template_description = "Launch template for HTML Games"
   update_default_version      = true
   launch_template_version     = "$Latest"
@@ -65,7 +65,7 @@ module "asg" {
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("user-data.sh")
+  user_data       = filebase64("game-2048.sh")
 
   create_iam_instance_profile = true
   iam_role_name               = "ssm-iam-profile"
@@ -80,6 +80,45 @@ module "asg" {
 
   tags = {
     Environment = "Terraform"
-    Name        = "html-games"
+    Name        = "html-games-1"
+  }
+}
+
+module "asg-2" {
+  source  = "terraform-aws-modules/autoscaling/aws"
+  version = "6.10.0"
+
+  name = "floppybird"
+
+  min_size                  = 1
+  max_size                  = 1
+  desired_capacity          = 1
+  health_check_grace_period = 300
+  health_check_type         = "EC2"
+  vpc_zone_identifier       = module.vpc.private_subnets
+  force_delete              = true
+
+  target_group_arns = [module.alb.target_group_arns[1]]
+
+  #   create_launch_template  = false
+  #   launch_template         = module.asg-1.launch_template_name
+  #   launch_template_version = "$Latest"
+
+  launch_template_name        = "html-launch-template2"
+  launch_template_description = "Launch template for HTML Games"
+  update_default_version      = true
+  launch_template_version     = "$Latest"
+
+  image_id        = data.aws_ami.amazonlinux2.id
+  instance_type   = "t2.micro"
+  security_groups = [module.private_sg.security_group_id]
+  user_data       = filebase64("game-bird.sh")
+
+  create_iam_instance_profile = false
+  iam_instance_profile_arn    = module.asg-1.iam_instance_profile_arn
+
+  tags = {
+    Environment = "Terraform"
+    Name        = "html-games-2"
   }
 }

@@ -15,6 +15,10 @@ module "vpc" {
     Name = "html-vpc"
   }
 
+  igw_tags = {
+    Name = "igw"
+  }
+
   nat_gateway_tags = {
     Name = "nat"
   }

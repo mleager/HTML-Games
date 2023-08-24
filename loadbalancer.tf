@@ -71,15 +71,11 @@ module "alb" {
 
   target_groups = [
     {
-      name_prefix          = "2048-"
+      name                 = "2048"
       backend_protocol     = "HTTP"
       backend_port         = 80
       target_type          = "instance"
       deregistration_delay = 10
-      my_target = {
-          target_id = #module.asg.instance_id
-          port = 80
-        }
 
       health_check = {
         enabled             = true
@@ -94,7 +90,7 @@ module "alb" {
       }
     },
     {
-      name_prefix          = "floppybird-"
+      name                 = "floppybird"
       backend_protocol     = "HTTP"
       backend_port         = 80
       target_type          = "instance"
@@ -126,6 +122,9 @@ module "alb" {
   https_listener_rules = [
     {
       https_listener_index = 0
+      target_group_index   = 0
+      priority             = 1
+
       actions = [{
         type     = "forward"
         protocol = "HTTPS"
@@ -136,7 +135,10 @@ module "alb" {
       }]
     },
     {
-      https_listener_index = 1
+      https_listener_index = 0
+      target_group_index   = 1
+      priority             = 2
+
       actions = [{
         type     = "forward"
         protocol = "HTTPS"
