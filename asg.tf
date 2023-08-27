@@ -62,6 +62,7 @@ module "asg-1" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
+  instance_name   = "2048" 
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
@@ -109,6 +110,7 @@ module "asg-2" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
+  instance_name   = "floppybird" 
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
