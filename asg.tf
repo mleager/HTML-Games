@@ -62,11 +62,11 @@ module "asg_landing" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
-  instance_name   = "landing" 
+  instance_name   = "landing"
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("landing-page.sh")
+  user_data       = filebase64("scripts/landing-page.sh")
 
   create_iam_instance_profile = true
   iam_role_name               = "ssm-s3-iam-profile"
@@ -76,7 +76,7 @@ module "asg_landing" {
     CustomIamRole = "Yes"
   }
   iam_role_policies = {
-    AmazonS3FullAccess = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+    AmazonS3FullAccess           = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   }
 
@@ -107,11 +107,11 @@ module "asg_2048" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
-  instance_name   = "2048" 
+  instance_name   = "2048"
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("game-2048.sh")
+  user_data       = filebase64("scripts/game-2048.sh")
 
   create_iam_instance_profile = true
   iam_role_name               = "ssm-iam-profile"
@@ -151,11 +151,11 @@ module "asg_floppybird" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
-  instance_name   = "floppybird" 
+  instance_name   = "floppybird"
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("game-bird.sh")
+  user_data       = filebase64("scripts/game-bird.sh")
 
   create_iam_instance_profile = false
   iam_instance_profile_arn    = module.asg_2048.iam_instance_profile_arn
@@ -187,11 +187,11 @@ module "asg_pong" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
-  instance_name   = "pong" 
+  instance_name   = "pong"
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("game-pong.sh")
+  user_data       = filebase64("scripts/game-pong.sh")
 
   create_iam_instance_profile = false
   iam_instance_profile_arn    = module.asg_2048.iam_instance_profile_arn
@@ -206,7 +206,7 @@ module "asg_tetris" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "6.10.0"
 
-  name = "floppybird"
+  name = "asg-tetris"
 
   min_size                  = 1
   max_size                  = 1
@@ -223,11 +223,11 @@ module "asg_tetris" {
   update_default_version      = true
   launch_template_version     = "$Latest"
 
-  instance_name   = "tetris" 
+  instance_name   = "tetris"
   image_id        = data.aws_ami.amazonlinux2.id
   instance_type   = "t2.micro"
   security_groups = [module.private_sg.security_group_id]
-  user_data       = filebase64("game-tetris.sh")
+  user_data       = filebase64("scripts/game-tetris.sh")
 
   create_iam_instance_profile = false
   iam_instance_profile_arn    = module.asg_2048.iam_instance_profile_arn

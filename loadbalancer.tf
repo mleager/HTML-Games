@@ -180,7 +180,7 @@ module "alb" {
     {
       https_listener_index = 0
       target_group_index   = 0
-      priority             = 0
+      priority             = 1
 
       actions = [{
         type     = "forward"
@@ -194,7 +194,7 @@ module "alb" {
     {
       https_listener_index = 0
       target_group_index   = 1
-      priority             = 1
+      priority             = 2
 
       actions = [{
         type     = "forward"
@@ -208,7 +208,7 @@ module "alb" {
     {
       https_listener_index = 0
       target_group_index   = 2
-      priority             = 2
+      priority             = 3
 
       actions = [{
         type     = "forward"
@@ -219,10 +219,10 @@ module "alb" {
         path_patterns = ["/floppybird*"]
       }]
     },
-        {
+    {
       https_listener_index = 0
       target_group_index   = 3
-      priority             = 3
+      priority             = 4
 
       actions = [{
         type     = "forward"
@@ -233,10 +233,10 @@ module "alb" {
         path_patterns = ["/pong*"]
       }]
     },
-        {
+    {
       https_listener_index = 0
       target_group_index   = 4
-      priority             = 4
+      priority             = 5
 
       actions = [{
         type     = "forward"
