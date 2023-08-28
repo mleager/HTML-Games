@@ -71,7 +71,7 @@ module "alb" {
 
   target_groups = [
     {
-      name                 = "2048"
+      name                 = "landing-tg"
       backend_protocol     = "HTTP"
       backend_port         = 80
       target_type          = "instance"
@@ -83,14 +83,14 @@ module "alb" {
         path                = "/healthz"
         port                = "traffic-port"
         healthy_threshold   = 2
-        unhealthy_threshold = 3
-        timeout             = 6
+        unhealthy_threshold = 6
+        timeout             = 15
         protocol            = "HTTP"
         matcher             = "200"
       }
     },
     {
-      name                 = "floppybird"
+      name                 = "2048-tg"
       backend_protocol     = "HTTP"
       backend_port         = 80
       target_type          = "instance"
@@ -102,8 +102,65 @@ module "alb" {
         path                = "/healthz"
         port                = "traffic-port"
         healthy_threshold   = 2
-        unhealthy_threshold = 3
-        timeout             = 6
+        unhealthy_threshold = 6
+        timeout             = 15
+        protocol            = "HTTP"
+        matcher             = "200"
+      }
+    },
+    {
+      name                 = "floppybird-tg"
+      backend_protocol     = "HTTP"
+      backend_port         = 80
+      target_type          = "instance"
+      deregistration_delay = 10
+
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/healthz"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 6
+        timeout             = 15
+        protocol            = "HTTP"
+        matcher             = "200"
+      }
+    },
+    {
+      name                 = "pong-tg"
+      backend_protocol     = "HTTP"
+      backend_port         = 80
+      target_type          = "instance"
+      deregistration_delay = 10
+
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/healthz"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 6
+        timeout             = 15
+        protocol            = "HTTP"
+        matcher             = "200"
+      }
+    },
+    {
+      name                 = "tetris-tg"
+      backend_protocol     = "HTTP"
+      backend_port         = 80
+      target_type          = "instance"
+      deregistration_delay = 10
+
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/healthz"
+        port                = "traffic-port"
+        healthy_threshold   = 2
+        unhealthy_threshold = 6
+        timeout             = 15
         protocol            = "HTTP"
         matcher             = "200"
       }
@@ -131,7 +188,7 @@ module "alb" {
       }]
 
       conditions = [{
-        path_patterns = ["/2048*"]
+        path_patterns = ["/"]
       }]
     },
     {
@@ -145,7 +202,49 @@ module "alb" {
       }]
 
       conditions = [{
+        path_patterns = ["/2048*"]
+      }]
+    },
+    {
+      https_listener_index = 0
+      target_group_index   = 2
+      priority             = 3
+
+      actions = [{
+        type     = "forward"
+        protocol = "HTTPS"
+      }]
+
+      conditions = [{
         path_patterns = ["/floppybird*"]
+      }]
+    },
+    {
+      https_listener_index = 0
+      target_group_index   = 3
+      priority             = 4
+
+      actions = [{
+        type     = "forward"
+        protocol = "HTTPS"
+      }]
+
+      conditions = [{
+        path_patterns = ["/pong*"]
+      }]
+    },
+    {
+      https_listener_index = 0
+      target_group_index   = 4
+      priority             = 5
+
+      actions = [{
+        type     = "forward"
+        protocol = "HTTPS"
+      }]
+
+      conditions = [{
+        path_patterns = ["/tetris*"]
       }]
     }
   ]
