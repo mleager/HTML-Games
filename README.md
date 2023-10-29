@@ -1,32 +1,32 @@
 # HTML Games
 
-    Purpose:
-        
-        - Deploy multiple HTML games from a single POC
-          using Path-Based Routing
+## Purpose:
 
-    
-    Basic Starting Architecture ( Bottom-Up ):
+- Deploy multiple HTML games from a single POC
+using Path-Based Routing
 
-        - VPC to house the AWS resources
+## Basic Starting Architecture ( Bottom-Up ):
 
-        - EC2 instances running the workload
+- VPC to house the AWS network resources
 
-        - ASG maintaining workload balance
+- EC2 instances running the workload
 
-        - ALB routing incoming traffic to correct instance
-          using Path-Based Routing
+- ASG maintaining workload balance
 
-        - Route53 DNS to provide User with single POC
+- ALB routing incoming traffic to correct instance
+using Path-Based Routing
 
-    
-    Secondary Goal:
+- Route53 DNS to provide User with single POC
 
-        - Migrate to ECS Cluster
+## Secondary Goal:
 
-    
-    End Goal:
+- Migrate to ECS Cluster
 
-        - Migrate to EKS Cluster
+## End Goal:
 
-        - Utilize AWS Load Balancer as Ingress Controller
+- Migrate to EKS Cluster
+
+- Utilize AWS Load Balancer as Ingress Controller
+
+## Finished Product: 
+https://github.com/mleager/Terraform-EKS-Modules
